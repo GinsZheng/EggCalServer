@@ -1,21 +1,23 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, url_for
 import random
-import json
 
 app = Flask(__name__)
+
+app.config.from_pyfile('config.py')
 
 
 @app.route('/')
 def hello_world():
-    randomNum = random.randint(int('0x4e00', 16), int('0x9fa5', 16))
-    randomUnicode = "\\u%x" % randomNum
-    randomWord = str(randomUnicode.encode('utf-8').decode('unicode_escape'))
+    random_num = random.randint(int('0x4e00', 16), int('0x9fa5', 16))
+    random_unicode = "\\u%x" % random_num
+    random_word = str(random_unicode.encode('utf-8').decode('unicode_escape'))
 
-    blackEggProbability = str(random.randint(1, 333))
-    # imageLink = "https://www.baidu.com/img/bd_logo1.png?qua=high"
-    imageLink = "http://127.0.0.1:5000/static/images/imageInBlackEgg.png"
+    black_egg_probability = str(random.randint(1, 1000))
 
-    return jsonify({'word': randomWord, 'probability': blackEggProbability, 'link': imageLink})
+    image_url = url_for('static', filename='images/imageInBlackEgg.png')
+    image_link = app.config['DOMAIN'] + image_url
+
+    return jsonify({'word': random_word, 'probability': black_egg_probability, 'link': image_link})
 
 
 if __name__ == '__main__':
